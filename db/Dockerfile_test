@@ -1,0 +1,5 @@
+FROM postgres:13.1
+ENV POSTGRES_PASSWORD=postgres
+ENV POSTGRES_DB=storm_test
+
+COPY init/ /docker-entrypoint-initdb.d/

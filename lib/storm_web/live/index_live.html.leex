@@ -1,0 +1,41 @@
+<section class="section">
+  <div class="columns is-multiline">
+    <%= for collection <- @collections.collections |> Enum.filter(fn x -> Storm.Collection.is_visible?(@active_collections, x) end) do %>
+      <div class="column is-one-quarter">
+        <div class="card">
+          <div class="card-content has-text-centered">
+            <p class="title">
+              <%= collection.title %>
+            </p>
+            <p class="subtitle">
+              <%= collection.description %>
+            </p>
+          </div>
+          <footer class="card-footer">
+            <p class="card-footer-item">
+            <span>
+              <a href="/collection/<%= collection.id %>">show ideas</a>
+            </span>
+            </p>
+          </footer>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<section/>
+<section class="section">
+<%= pager(@collections) %>
+</section>
+<section class="section">
+  <div class="columns">
+    <div class="column">
+      <button id="add_collection" phx-click="add_collection" class="button">
+        <span class="icon">
+          <i class="fas fa-plus"></i>
+        </span>
+        <span>Add collection</span>
+      </button>
+    </div>
+  </div>
+</section>
+

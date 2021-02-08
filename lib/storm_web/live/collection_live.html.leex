@@ -1,0 +1,173 @@
+<section class="hero is-info is-small mt-4 mb-4">
+  <nav class="level mt-2 mr-2 ml-2">
+    <div class="level-left content">
+    </div>
+
+    <!-- collection config -->
+    <div class="level-right">
+      <p class="level-item">
+        <%= live_component(@socket, StormWeb.Live.Components.Collection.User, 
+          id: "user_name_#{@storm_collection.id}", 
+          storm_collection: @storm_collection,
+          active_collections: @active_collections,
+          active_user: @active_user,
+          storm_uuid: @storm_uuid) %>
+      </p>
+      <%= if Storm.User.is_owner?(@active_user) do %>
+        <p class="level-item">
+          <%= live_component(@socket, StormWeb.Live.Components.Collection.Visibility,
+            id: "toggle_collection_visibility_#{@storm_collection.id}",
+            storm_collection: @storm_collection,
+            active_collections: @active_collections,
+            active_user: @active_user,
+            storm_uuid: @storm_uuid) %>
+        </p>
+      <% end %>
+      <p class="level-item">
+        <%= live_component(@socket, StormWeb.Live.Components.Collection.AddIdea,
+          id: "add_idea_#{@storm_collection.id}",
+          storm_collection: @storm_collection,
+          active_collections: @active_collections,
+          active_user: @active_user,
+          storm_uuid: @storm_uuid) %>
+      </p>
+    </div>
+  </nav>
+
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <%= live_component(@socket, StormWeb.Live.Components.Collection.Title, 
+        id: "collection_title#{@storm_collection.id}", 
+        storm_collection: @storm_collection,
+        active_user: @active_user) %>
+      <%= live_component(@socket, StormWeb.Live.Components.Collection.Description, 
+        id: "collection_description_#{@storm_collection.id}", 
+        storm_collection: @storm_collection,
+        active_user: @active_user) %>
+    </div>
+  </div>
+
+  <%= live_component(@socket, StormWeb.Live.Components.Collection.Statistic,
+    ideas: length(@storm_collection.ideas),
+    pros: Storm.Collection.pros_count(@storm_collection),
+    cons: Storm.Collection.cons_count(@storm_collection),
+    comments: Storm.Collection.comments_count(@storm_collection),
+    likes: Storm.Collection.likes_count(@storm_collection)) %>
+</section>
+
+<%= for idea <- @storm_collection.ideas |> Enum.filter(fn x -> Storm.Idea.is_visible?(x, @active_user) end) do %>
+  <section class="hero is-primary is-small">
+    <nav class="level mr-5 mt-5 ml-5">
+      <div class="level-left content"></div>
+      <div class="level-right">
+        <%= if Storm.Idea.can_like?(idea, @active_user) do %>
+          <p class="level-item">
+            <%= live_component(@socket, StormWeb.Live.Components.Idea.Like, 
+              id: "like_idea_#{idea.id}", 
+              idea: idea,
+              storm_collection: @storm_collection,
+              active_collections: @active_collections,
+              active_user: @active_user,
+              storm_uuid: @storm_uuid) %>
+          </p>
+        <% end %> 
+        <%= if Storm.Idea.can_edit?(idea, @active_user) do %>
+          <p class="level-item">
+            <%= live_component(@socket, StormWeb.Live.Components.Idea.Visibility, id: "toggle_idea_visibility_#{idea.id}", idea: idea) %>
+          </p>
+        <% end %>
+        <%= if Storm.Idea.can_delete?(idea, @active_user) do %>
+          <p class="level-item">
+            <%= live_component(@socket, StormWeb.Live.Components.Idea.Delete, id: "delete_idea_#{idea.id}", idea: idea) %>
+          </p>
+        <% end %>
+      </div>
+    </nav>
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <%= live_component(@socket, StormWeb.Live.Components.Idea.Content, 
+          id: "idea_content_#{idea.id}", 
+          idea: idea,
+          active_user: @active_user) %>
+        <%= live_component(@socket, StormWeb.Live.Components.Idea.Description, 
+          id: "idea_description_#{idea.id}", 
+          idea: idea,
+          active_user: @active_user) %>
+        </p>
+        <%= if not is_nil(idea.creator) && not is_nil(idea.creator.name) do %>
+          <p>
+            by <%= idea.creator.name %>
+          </p>
+        <% end %>
+    </div>
+
+    <%= live_component(@socket, StormWeb.Live.Components.Idea.Statistic,
+      pros: length(idea.pros),
+      cons: length(idea.cons),
+      comments: length(idea.comments),
+      likes: length(idea.likes)) %>
+  </section>
+
+  <section class="section">
+    <div class="columns">
+      <div class="column content">
+        <%= for pro <- idea.pros |> Enum.filter(fn x -> Storm.Text.is_visible?(x, @active_user) end) do %>
+          <%= live_component(@socket, StormWeb.Live.Components.Text.Content, 
+            id: "idea_text_#{pro.id}", 
+            text: pro,
+            prefix: "pro",
+            active_user: @active_user) %>
+        <% end %>
+        <p>
+          <%= live_component(@socket, StormWeb.Live.Components.Text.Add,
+            id: "add_pro_#{idea.id}",
+            kind: "pro",
+            idea: idea,
+            storm_collection: @storm_collection,
+            active_collections: @active_collections,
+            active_user: @active_user,
+            storm_uuid: @storm_uuid) %>
+        </p>
+      </div>
+      <div class="column content">
+        <%= for con <- idea.cons |> Enum.filter(fn x -> Storm.Text.is_visible?(x, @active_user) end) do %>
+          <%= live_component(@socket, StormWeb.Live.Components.Text.Content, 
+            id: "idea_text_#{con.id}", 
+            text: con,
+            prefix: "con",
+            active_user: @active_user) %>
+        <% end %>
+        <p>
+          <%= live_component(@socket, StormWeb.Live.Components.Text.Add,
+            id: "add_text_#{idea.id}",
+            kind: "con",
+            idea: idea,
+            storm_collection: @storm_collection,
+            active_collections: @active_collections,
+            active_user: @active_user,
+            storm_uuid: @storm_uuid) %>
+        </p>
+      </div>
+    </div>
+    <div class="content">
+      <p><b>comments:</b></p>
+        <%= for comment <- idea.comments |> Enum.filter(fn x -> Storm.Text.is_visible?(x, @active_user) end) do %>
+          <%= live_component(@socket, StormWeb.Live.Components.Text.Content, 
+            id: "idea_text_#{comment.id}", 
+            text: comment,
+            prefix: "comment",
+            active_user: @active_user) %>
+        <% end %>
+        <p>
+          <%= live_component(@socket, StormWeb.Live.Components.Text.Add,
+            id: "add_comment_#{idea.id}",
+            kind: "comment",
+            idea: idea,
+            storm_collection: @storm_collection,
+            active_collections: @active_collections,
+            active_user: @active_user,
+            storm_uuid: @storm_uuid) %>
+        </p>
+    </div>
+  </section>
+<% end %>
