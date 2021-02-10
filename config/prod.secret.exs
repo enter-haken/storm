@@ -21,3 +21,9 @@ config :storm, StormWeb.Endpoint,
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.
+#
+config :storm, :pg_config,
+  hostname: "localhost",
+  username: "postgres",
+  database: "storm_dev",
+  show_sensitive_data_on_connection_error: true

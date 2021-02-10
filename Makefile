@@ -1,10 +1,16 @@
+NAME := hake/storm
+TAG := $$(git log -1 --pretty=%H)
+IMG := ${NAME}:${TAG}
+LATEST := ${NAME}:latest
+
+DOCKERHUB_TARGET := enterhaken/storm:latest
 .PHONY: default
 default: build
 
 .PHONY: check_deps
 check_deps:
 	if [ ! -d deps ]; then mix deps.get; fi
-	if [ ! -d assets/node_modules ]; then pushd assets; npm install; popd; fi
+	make -C assets
 
 .PHONY: build
 build: check_deps
@@ -45,7 +51,7 @@ docker:
 .PHONY: docker_run
 docker_run:
 	docker run \
-		-p 5054:4000 \
+		-p 5055:4000 \
 		--name storm \
 		-d \
 		-t ${LATEST} 
