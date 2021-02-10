@@ -8,7 +8,7 @@ build:
 	docker build -t storm_postgres_$(env) --file=Dockerfile_$(env) .
 
 .PHONY: run
-run:
+run: build
 	docker run \
 		--name storm_postgres_$(env) \
 		-e POSTGRES_HOST_AUTH_METHOD=trust \
