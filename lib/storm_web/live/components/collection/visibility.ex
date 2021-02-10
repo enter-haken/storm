@@ -20,8 +20,6 @@ defmodule StormWeb.Live.Components.Collection.Visibility do
     {:ok, socket}
   end
 
-  def update(_,_), do: false
-
   def update(
         %{
           active_user: active_user,
