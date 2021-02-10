@@ -2,7 +2,7 @@
 
 ![schema][1]
 
-# creating a first storm collection 
+## creating a first storm collection 
 
 ```
 storm_dev=# select insert_collection();
@@ -15,7 +15,7 @@ NOTICE:  created new collection 814eefdc-7511-4b25-9e4b-1b6aa8a158d9 with owner 
 
 ```
 
-After creating the first idea collection the collection it self and a user marked as an owner is created.
+After creating the first `idea collection` the `collection` it self and a `user` marked as an `owner` is created.
 
 ```
 storm_dev=# select * from collection;
@@ -26,6 +26,38 @@ storm_dev=# select * from collection;
 ```
 
 The `json_view` column contains all the collection data needed by the backend.
+
+If you want to update the `collection title`, you can change it by calling
+
+```
+storm_dev=# select update_collection_title('814eefdc-7511-4b25-9e4b-1b6aa8a158d9', 'New Title');
+NOTICE:  collection 814eefdc-7511-4b25-9e4b-1b6aa8a158d9 has been set to dirty (unknown)
+ update_collection_title 
+-------------------------
+ 
+(1 row)
+```
+
+Now the `collection` looks like
+
+```
+storm_dev=# select get_collection('814eefdc-7511-4b25-9e4b-1b6aa8a158d9');
+                                                                                                                          get_collection                                                                                                                           
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ {"id": "814eefdc-7511-4b25-9e4b-1b6aa8a158d9", "ideas": [], "title": "New Title", "users": [{"id": "bea46045-33dc-4ffd-b14f-f36c9eff97ec", "name": null, "is_owner": true, "show_identity": false}], "is_dirty": false, "is_visible": false, "description": null}
+(1 row)
+```
+
+## dirty
+
+The collections `json_view` will be set to `dirty` every time you
+
+* add / update / delete an idea
+* add / update / delete a idea pro / con / comment 
+* a like button is pressed.
+* content gets visible / invisible
+
+After setting a `collection` to `dirty`, a notification is send to the backend.
 
 ## using docker files
 
@@ -67,5 +99,9 @@ storm_dev=# select * from meta;
 
 storm_dev=# 
 ```
+
+<!-- hints for creating examples -->
+<!-- sql -h localhost -U postgres -d storm_dev -->
+<!-- \setenv PAGER cat -->
 
 [1]: assets/schema.png
