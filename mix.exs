@@ -4,8 +4,8 @@ defmodule Storm.MixProject do
   def project do
     [
       app: :storm,
-      version: "0.1.0",
-      elixir: "~> 1.7",
+      version: File.read!("VERSION") |> String.trim(),
+      elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,

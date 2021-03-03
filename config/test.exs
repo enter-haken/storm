@@ -10,9 +10,9 @@ config :storm, StormWeb.Endpoint,
 
 config :logger, :console, format: "[$level] $message\n"
 
+
 config :storm, :pg_config,
   hostname: "localhost",
-  username: "postgres",
-  database: "storm_test",
-  port: "5432",
-  show_sensitive_data_on_connection_error: true
+  username: "postgres", 
+  password: "postgres",
+  database: "storm_test" 

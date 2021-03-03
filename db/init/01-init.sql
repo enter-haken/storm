@@ -23,7 +23,7 @@ CREATE TABLE meta(
 
 -- TODO: use version from mix.exs
 
-INSERT INTO meta (key,value) VALUES ('version','0.1.0');
+INSERT INTO meta (key,value) VALUES ('version','1.0.0');
 
 CREATE TABLE collection(
   id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),

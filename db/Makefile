@@ -39,7 +39,7 @@ logs:
 
 .PHONY: wait
 wait:
-	while [ 1 -eq $$(docker exec -t storm_postgres_$(env) psql -U postgres -d storm_$(env) -c "\l" 2>&1 | grep error | wc -l) ]; \
+	while [[ "accepting" != $$(docker exec -t storm_postgres_$(env) pg_isready -U postgres -d storm_$(env) | awk '{print $$3}') ]]; \
 	do \
 		echo "waiting for db..."; \
 		sleep 1; \

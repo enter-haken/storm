@@ -1,9 +1,9 @@
-NAME := hake/storm
-TAG := $$(git log -1 --pretty=%H)
-IMG := ${NAME}:${TAG}
-LATEST := ${NAME}:latest
+SHELL := /bin/bash
 
-DOCKERHUB_TARGET := enterhaken/storm:latest
+VERSION := `cat VERSION`
+CURRENT := storm:${VERSION}
+DOCKERHUB_TARGET := enterhaken/storm:${VERSION}
+
 .PHONY: default
 default: build
 
@@ -13,7 +13,7 @@ check_deps:
 	make -C assets
 
 .PHONY: build
-build: check_deps
+build: check_deps 
 	mix compile --force --warnings-as-errors
 
 .PHONY: run
@@ -32,11 +32,26 @@ clean_deps:
 clean_assets:
 	rm assets/node_modules -rf || true
 
+.PHONY: clean_docker
+clean_docker:
+	docker stop storm || true
+	docker rm storm || true
+	docker rmi storm || true
+	# TODO: add filter
+	docker image prune -f
+	docker container prune -f
+	docker volume prune -f
+
 .PHONY: deep_clean
-deep_clean: clean clean_deps clean_assets
+deep_clean: clean clean_deps clean_assets clean_docker
 
 .PHONY: release
-release: build
+release: 
+	mix deps.get --only prod
+	MIX_ENV=prod mix compile --warnings-as-errors
+	npm install --prefix ./assets
+	npm run deploy --prefix ./assets
+	MIX_ENV=prod mix phx.digest
 	MIX_ENV=prod mix release
 
 .PHONY: test
@@ -45,16 +60,29 @@ test: build start_test_db
 
 .PHONY: docker
 docker: 
-	docker build -t ${IMG} .
-	docker tag ${IMG} ${LATEST}
+	docker build -t ${CURRENT} .
 
 .PHONY: docker_run
 docker_run:
 	docker run \
-		-p 5055:4000 \
+		-p 4000:4000 \
 		--name storm \
 		-d \
-		-t ${LATEST} 
+		-t ${CURRENT} 
+
+.PHONY: docker_push
+docker_push:
+	docker tag $(CURRENT) $(DOCKERHUB_TARGET) 
+	docker push $(DOCKERHUB_TARGET)
+
+.PHONY: up 
+up:
+	if [ ! -f ".env" ]; then ./create_env.sh; fi;
+	docker-compose up -d
+
+.PHONY: down
+down:
+	docker-compose down
 
 .PHONY: update
 update: docker
@@ -62,6 +90,7 @@ update: docker
 	docker rm storm 
 	make docker_run
 
+# used by silver searcher
 .PHONY: ignore
 ignore:
 	find deps/ > .ignore || true
@@ -77,5 +106,3 @@ start_test_db:
 .PHONY: start_dev_db
 start_dev_db: 
 	make -C db all wait || true
-
-
