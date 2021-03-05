@@ -32,7 +32,7 @@ Will do
 
 The database will be resetted on every run
 
-# production 
+# launch production version
 
 When you want to run `storm` in production mode, 
 you can use the `docker-compose.yml` file with.
@@ -41,4 +41,13 @@ you can use the `docker-compose.yml` file with.
 $ make up
 ```
 
-Currently the data is dropped on every start.
+A local `.env` file like
+
+```
+POSTGRES_HOST=storm_postgres_prod
+POSTGRES_DB=storm_prod
+POSTGRES_PASSWORD=kDf1hGn8empcXc1qJD5lyWfOvudRrtwrxg7pEHlb99U=
+POSTGRES_USER=postgres
+```
+
+will be created, if missing.
