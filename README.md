@@ -51,3 +51,7 @@ POSTGRES_USER=postgres
 ```
 
 will be created, if missing.
+
+# contact
+
+[hake.one](https://hake.one). Jan Frederik Hake, <jan_hake@gmx.de>. [@enter_haken](https://twitter.com/enter_haken) on Twitter. [enter-haken#7260](https://discord.com) on discord.
