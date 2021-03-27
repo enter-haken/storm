@@ -29,7 +29,7 @@ CREATE TABLE collection(
   id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(256),
   description VARCHAR(256),
-  is_visible boolean NOT NULL DEFAULT false,
+  is_visible boolean NOT NULL DEFAULT true,
   json_view JSONB NOT NULL DEFAULT '{ "is_dirty": true }'::JSONB
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE browser_session(
 CREATE TABLE idea(
   id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
   id_creator UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-  is_visible BOOLEAN NOT NULL DEFAULT false,
+  is_visible BOOLEAN NOT NULL DEFAULT true,
   content VARCHAR(2048),
   description VARCHAR(4196)
 );
@@ -60,6 +60,7 @@ CREATE TABLE idea(
 CREATE TABLE text(
   id UUID NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
   id_creator UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+  -- TODO: if set to true, application breaks
   is_visible BOOLEAN DEFAULT false,
 
   content text
