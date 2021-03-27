@@ -2,12 +2,8 @@ defmodule Storm.Application do
   use Application
 
   def start(_type, _args) do
-    credentials = Application.get_env(:storm, :pg_config)
-
     children = [
-      {Storm.Db.Listen, credentials},
-      {Storm.Db.ListenBrowserSession, credentials},
-      {Storm.Db.Crud, credentials},
+      Storm.Db.Supervisor,
       Storm.CollectionSupervisor,
       StormWeb.Telemetry,
       {Phoenix.PubSub, name: Storm.PubSub},
