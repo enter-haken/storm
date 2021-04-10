@@ -12,4 +12,5 @@ config :storm, :pg_config,
       raise("POSTGRES_PASSWORD not found (hint: export $(xargs < .env)"),
   database:
     System.get_env("POSTGRES_DB") ||
-      raise("POSTGRES_DB not found (hint: export $(xargs < .env)")
+      raise("POSTGRES_DB not found (hint: export $(xargs < .env)"),
+  pool_size: 10
