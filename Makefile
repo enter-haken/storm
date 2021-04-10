@@ -16,7 +16,7 @@ check_deps:
 build: check_deps 
 	mix compile --force --warnings-as-errors
 
-.PHONY: run
+.PHONY: run 
 run: build start_dev_db
 	iex -S mix phx.server
 
@@ -34,9 +34,9 @@ clean_assets:
 
 .PHONY: clean_docker
 clean_docker:
-	docker stop storm || true
-	docker rm storm || true
-	docker rmi storm || true
+	docker stop storm_app || true
+	docker rm storm_app || true
+	docker rmi storm_app || true
 	# TODO: add filter
 	docker image prune -f
 	docker container prune -f

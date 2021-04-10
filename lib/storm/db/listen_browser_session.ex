@@ -7,14 +7,21 @@ defmodule Storm.Db.ListenBrowserSession do
     GenServer.start_link(__MODULE__, args, name: :browser_session_listener)
   end
 
-  def init(pg_config) do
-    {:ok, pid} = Postgrex.Notifications.start_link(pg_config)
-    {:ok, ref} = Postgrex.Notifications.listen(pid, "browser_session")
+  def init(_args) do
+    {:ok, pid} =
+      Application.get_env(:storm, :pg_config)
+      |> Keyword.put_new(:auto_reconnect, true)
+      |> Postgrex.Notifications.start_link()
 
-    Logger.info("#{__MODULE__} started.")
-    Logger.info("#{__MODULE__}: listening to changes for pid #{inspect(pid)}")
+    case Postgrex.Notifications.listen(pid, "browser_session") do
+      {:ok, ref} ->
+        Logger.info("#{__MODULE__}: listening to changes for pid #{inspect(pid)}")
+        {:ok, {pid, ref}}
 
-    {:ok, {pid, ref}}
+      {:eventually, ref} ->
+        Logger.warn("#{__MODULE__}: started listener for pid #{inspect(pid)}. Some messages may be dropped.")
+        {:ok, {pid, ref}}
+    end
   end
 
   def handle_info({:notification, _pid, _ref, "browser_session", browser_session_id}, state) do

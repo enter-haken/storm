@@ -28,7 +28,8 @@ config :storm, :pg_config,
   hostname: "localhost",
   username: "postgres",
   password: "postgres",
-  database: "storm_dev"
+  database: "storm_dev",
+  pool_size: 10
 
 config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20

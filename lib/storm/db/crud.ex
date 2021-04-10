@@ -7,8 +7,10 @@ defmodule Storm.Db.Crud do
     GenServer.start_link(__MODULE__, args, name: :crud)
   end
 
-  def init(pg_config) do
-    {:ok, pid} = Postgrex.start_link(pg_config)
+  def init(_args) do
+    {:ok, pid} = 
+      Application.get_env(:storm, :pg_config)
+      |> Postgrex.start_link()
 
     Logger.info("#{__MODULE__} started.")
     Logger.info("#{__MODULE__}: listening to changes for pid #{inspect(pid)}")
