@@ -3,6 +3,7 @@ SHELL := /bin/bash
 VERSION := `cat VERSION`
 CURRENT := storm:${VERSION}
 DOCKERHUB_TARGET := enterhaken/storm:${VERSION}
+DOCKERHUB_TARGET_LATEST := enterhaken/storm:latest
 
 .PHONY: default
 default: build
@@ -74,6 +75,8 @@ docker_run:
 docker_push:
 	docker tag $(CURRENT) $(DOCKERHUB_TARGET) 
 	docker push $(DOCKERHUB_TARGET)
+	docker tag $(CURRENT) $(DOCKERHUB_TARGET_LATEST) 
+	docker push $(DOCKERHUB_TARGET_LATEST)
 
 .PHONY: up 
 up:
