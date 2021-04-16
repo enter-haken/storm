@@ -33,6 +33,10 @@ clean_deps:
 clean_assets:
 	rm assets/node_modules -rf || true
 
+.PHONY: clean_priv_static
+clean_priv_static:
+	rm priv/static -rf || true
+
 .PHONY: clean_docker
 clean_docker:
 	docker stop storm_app || true
@@ -44,7 +48,7 @@ clean_docker:
 	docker volume prune -f
 
 .PHONY: deep_clean
-deep_clean: clean clean_deps clean_assets clean_docker
+deep_clean: clean clean_deps clean_assets clean_priv_static clean_docker
 
 .PHONY: release
 release: 
