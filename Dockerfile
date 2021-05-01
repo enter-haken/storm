@@ -1,10 +1,4 @@
 # backend builder
-
-ARG POSTGRES_HOST=${POSTGRES_HOST}
-ARG POSTGRES_DB=${POSTGRES_DB}
-ARG POSTGRES_USER=${POSTGRES_USER}
-ARG POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
 FROM elixir:1.11.2 AS backend_builder
 
 # TODO: extract node related stuff to seperate stage.
@@ -28,11 +22,6 @@ RUN make release
 # backend runner 
 
 FROM elixir:1.11.2-slim AS runner
-
-ARG POSTGRES_HOST
-ARG POSTGRES_DB
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
 
 ENV POSTGRES_HOST ${POSTGRES_HOST}
 ENV POSTGRES_DB ${POSTGRES_DB}
