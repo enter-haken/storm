@@ -44,7 +44,8 @@ defmodule Storm.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:uuid, "~> 1.1"},
-      {:postgrex, "~> 0.15"},
+      #{:postgrex, "~> 0.15"},
+      {:postgrex, git: "https://github.com/enter-haken/postgrex", branch: "master"},
       {:guardian, "~> 2.1"}
 
     ]

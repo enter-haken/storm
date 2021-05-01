@@ -23,16 +23,6 @@ COPY . .
 RUN mix local.hex --force
 RUN mix local.rebar --force
 
-ARG POSTGRES_HOST
-
-# The POSTGRES_HOST variable is needed at build time.
-# otherwise it is set to `localhost` per default.
-
-# see: https://github.com/elixir-ecto/postgrex/blob/v0.15.8/lib/postgrex.ex#L168
-# and: https://github.com/elixir-ecto/postgrex/blob/v0.15.8/lib/postgrex/utils.ex#L83
-
-ENV POSTGRES_HOST ${POSTGRES_HOST}
-
 RUN make release
 
 # backend runner 
