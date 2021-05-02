@@ -45,7 +45,7 @@ clean_docker:
 	# TODO: add filter
 	docker image prune -f
 	docker container prune -f
-	docker volume prune -f
+	docker volume rm storm_db || true
 
 .PHONY: deep_clean
 deep_clean: clean clean_deps clean_assets clean_priv_static clean_docker
@@ -86,6 +86,7 @@ docker_push:
 up:
 	if [ ! -f ".env" ]; then ./create_env.sh; fi;
 	docker-compose up -d
+	docker logs -tf storm_postgres_prod
 
 .PHONY: down
 down:

@@ -9,10 +9,11 @@ services:
     container_name: storm_app
     restart: always
     environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # default envs postgrex is looking for
+      - PGHOST=${PGHOST}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
     ports:
       - "4000:4000"
     depends_on:
@@ -23,10 +24,11 @@ services:
     container_name: storm_postgres_prod
     restart: always
     environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # default envs postgres is looking for
+      - POSTGRES_HOST=${PGHOST}
+      - POSTGRES_DB=${PGDATABASE}
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
     ports:
       - "5432:5432"
     # init db script will be only executed 
